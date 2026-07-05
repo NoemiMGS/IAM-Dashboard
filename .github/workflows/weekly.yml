@@ -1,11 +1,56 @@
-# In den Ordner mit dem entpackten Zip wechseln (dort wo collectors/, config/, etc. liegen)
-cd iam-intelligence-dashboard
+name: Weekly Update (Modul 3 + 4)
 
-git init
-git add .
-git commit -m "Add missing workflows and config"
+on:
+  schedule:
+    # Montags, gleiche Doppel-Cron-Logik wie im Daily-Workflow für 07:00 Europe/Berlin
+    - cron: "0 5 * * 1"  # 07:00 CEST (Sommerzeit)
+    - cron: "0 6 * * 1"  # 07:00 CET (Winterzeit)
+  workflow_dispatch: {}
 
-git remote add origin https://github.com/NoemiMGS/IAM-Dashboard.git
-git branch -M main
-git pull origin main --allow-unrelated-histories   # holt deine bereits gepushten Dateien
-git push -u origin main
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Nur um 07:00 Europe/Berlin wirklich laufen
+        id: timecheck
+        run: |
+          HOUR=$(TZ=Europe/Berlin date +%H)
+          if [ "$HOUR" = "07" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up Python
+        if: steps.timecheck.outputs.run == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        if: steps.timecheck.outputs.run == 'true'
+        run: pip install -r collectors/requirements.txt
+
+      - name: Modul 3 - Compliance-Updates
+        if: steps.timecheck.outputs.run == 'true'
+        run: python collectors/compliance_updates.py
+
+      - name: Modul 4 - Content-Pipeline (Drafts)
+        if: steps.timecheck.outputs.run == 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python collectors/content_pipeline.py
+
+      - name: Ergebnisse committen
+        if: steps.timecheck.outputs.run == 'true'
+        run: |
+          git config user.name "iam-dashboard-bot"
+          git config user.email "actions@github.com"
+          git add data/
+          git diff --quiet --cached || git commit -m "Weekly update: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push
