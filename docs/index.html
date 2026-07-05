@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IAM Intelligence Dashboard</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>IAM Intelligence Dashboard</h1>
+    <p class="subtitle">Trigger-Events · Vendor-News &amp; CVEs · Compliance-Updates · Content-Drafts</p>
+  </header>
+
+  <main>
+    <section class="module" id="module-1">
+      <h2>Modul 1 — Markt-Signale (branchenweit)</h2>
+      <div class="list" data-source="../data/market-signals.json"></div>
+    </section>
+
+    <section class="module" id="module-2">
+      <h2>Modul 2 — Vendor-News &amp; CVEs</h2>
+      <div class="list" data-source="../data/vendor-news.json"></div>
+    </section>
+
+    <section class="module" id="module-3">
+      <h2>Modul 3 — Compliance-Updates</h2>
+      <div class="list" data-source="../data/compliance-updates.json"></div>
+    </section>
+
+    <section class="module" id="module-4">
+      <h2>Modul 4 — Content-Drafts (zur Freigabe)</h2>
+      <div class="list" data-source="../data/content-drafts.json"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Letzte Aktualisierung je Modul siehe Zeitstempel oben in jeder Kachel.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
