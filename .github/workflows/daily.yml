@@ -1,0 +1,11 @@
+# In den Ordner mit dem entpackten Zip wechseln (dort wo collectors/, config/, etc. liegen)
+cd iam-intelligence-dashboard
+
+git init
+git add .
+git commit -m "Add missing workflows and config"
+
+git remote add origin https://github.com/NoemiMGS/IAM-Dashboard.git
+git branch -M main
+git pull origin main --allow-unrelated-histories   # holt deine bereits gepushten Dateien
+git push -u origin main
