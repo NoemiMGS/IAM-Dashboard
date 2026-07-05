@@ -6,7 +6,7 @@ und einer Content-Draft-Pipeline für Marketing.
 
 - **Täglich, 07:00 Uhr (Europe/Berlin):** Modul 1 (Markt-Signale, branchenweit) + Modul 2 (Vendor-News/CVE)
 - **Wöchentlich, montags 07:00 Uhr (Europe/Berlin):** Modul 3 (Compliance) + Modul 4 (Content-Drafts)
-
+- **Kritische Treffer** werden zusätzlich per E-Mail an `noemi.schwarztrauber@outlook.com` gesendet.
 - **Kein Kundenbezug:** Modul 1 beobachtet ausschließlich branchenweite, generische Themenkategorien (z.B. CISO-Wechsel allgemein, Sicherheitsvorfälle in der DACH-Region). Es wird nirgends nach einem konkreten Unternehmensnamen gesucht, gefiltert oder gespeichert.
 
 ## 1. Repo einrichten

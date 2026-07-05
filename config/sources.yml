@@ -1,0 +1,45 @@
+# Quellen für Modul 2 (Vendor-News/CVE) und Modul 3 (Compliance)
+#
+# HINWEIS: Feed-URLs bei Hersteller-Security-Portalen ändern sich gelegentlich.
+# Bitte vor dem ersten Produktivlauf einmal jede URL im Browser prüfen
+# (Kennzeichnung "PRÜFEN" = zum Start unbedingt verifizieren).
+
+# --- Modul 2: Vendor-Keywords für die NVD-CVE-Abfrage (verifizierte API) ---
+cve_vendor_keywords:
+  - "One Identity"
+  - "SailPoint"
+  - "CyberArk"
+  - "Microsoft Entra ID"
+  - "Azure Active Directory"
+
+cve_critical_cvss_threshold: 7.0
+
+# --- Modul 2: zusätzliche RSS-Quellen (Herstellerbulletins, regulatorisch) ---
+vendor_rss_feeds:
+  - name: "MSRC Security Update Guide"
+    url: "https://api.msrc.microsoft.com/update-guide/rss"
+    status: "PRÜFEN"
+  - name: "ENISA News"
+    url: "https://www.enisa.europa.eu/news/rss.xml"
+    status: "PRÜFEN"
+  - name: "SailPoint Trust Center"
+    url: ""
+    status: "PRÜFEN - ggf. kein öffentliches RSS, evtl. manuell/Mail-Abo nötig"
+  - name: "CyberArk Security Bulletins"
+    url: ""
+    status: "PRÜFEN - ggf. kein öffentliches RSS, evtl. manuell/Mail-Abo nötig"
+  - name: "One Identity Support Advisories"
+    url: ""
+    status: "PRÜFEN - ggf. kein öffentliches RSS, evtl. manuell/Mail-Abo nötig"
+
+# --- Modul 3: Compliance-Quellen ---
+compliance_rss_feeds:
+  - name: "BSI Presse & Warnungen"
+    url: "https://www.bsi.bund.de/SiteGlobals/Functions/RSSFeed/RSSNewsfeed/RSSNewsfeed.xml"
+    status: "PRÜFEN"
+  - name: "EUR-Lex Neueste Rechtsakte"
+    url: "https://eur-lex.europa.eu/EN/display-feed.rss"
+    status: "PRÜFEN"
+  - name: "Datenschutzkonferenz (DSK)"
+    url: ""
+    status: "PRÜFEN - meist kein RSS, ggf. Webseite periodisch prüfen"
