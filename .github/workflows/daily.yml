@@ -32,4 +32,46 @@ jobs:
           fi
 
       - name: Set up Python
-        if:
+        if: steps.timecheck.outputs.run == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        if: steps.timecheck.outputs.run == 'true'
+        run: pip install -r collectors/requirements.txt
+
+      - name: Modul 1 - Markt-Signale (branchenweit, ohne Kundenbezug)
+        if: steps.timecheck.outputs.run == 'true'
+        run: python collectors/market_signals.py
+
+      - name: Modul 2 - Vendor-News & CVEs
+        if: steps.timecheck.outputs.run == 'true'
+        run: python collectors/vendor_news.py
+
+      - name: Kritische Treffer sammeln
+        if: steps.timecheck.outputs.run == 'true'
+        id: alertcheck
+        run: python scripts/build_alert_email.py
+
+      - name: E-Mail-Alert bei kritischen Treffern senden
+        if: steps.timecheck.outputs.run == 'true' && steps.alertcheck.outputs.has_critical == 'true'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.MAIL_SERVER }}
+          server_port: ${{ secrets.MAIL_PORT }}
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "⚠️ IAM Dashboard: kritische Treffer heute"
+          to: noemi.schwarztrauber@outlook.com
+          from: "IAM Intelligence Dashboard"
+          html_body: file://data/alert_email_body.html
+
+      - name: Ergebnisse committen
+        if: steps.timecheck.outputs.run == 'true'
+        run: |
+          git config user.name "iam-dashboard-bot"
+          git config user.email "actions@github.com"
+          git add data/
+          git diff --quiet --cached || git commit -m "Daily update: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push
