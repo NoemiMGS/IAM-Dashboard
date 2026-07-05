@@ -1,11 +1,35 @@
-# In den Ordner mit dem entpackten Zip wechseln (dort wo collectors/, config/, etc. liegen)
-cd iam-intelligence-dashboard
+name: Daily Update (Modul 1 + 2)
 
-git init
-git add .
-git commit -m "Add missing workflows and config"
+on:
+  schedule:
+    # GitHub Actions cron läuft in UTC, Europe/Berlin wechselt zwischen
+    # UTC+1 (CET, Winter) und UTC+2 (CEST, Sommer). Deshalb zwei Cron-Einträge,
+    # der Zeit-Check-Schritt unten sorgt dafür, dass nur der tatsächlich um
+    # 07:00 Europe/Berlin passende Lauf wirklich etwas tut.
+    - cron: "0 5 * * *"  # 07:00 CEST (Sommerzeit)
+    - cron: "0 6 * * *"  # 07:00 CET (Winterzeit)
+  workflow_dispatch: {}   # manueller Start jederzeit möglich
 
-git remote add origin https://github.com/NoemiMGS/IAM-Dashboard.git
-git branch -M main
-git pull origin main --allow-unrelated-histories   # holt deine bereits gepushten Dateien
-git push -u origin main
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Nur um 07:00 Europe/Berlin wirklich laufen
+        id: timecheck
+        run: |
+          HOUR=$(TZ=Europe/Berlin date +%H)
+          echo "Aktuelle lokale Stunde (Europe/Berlin): $HOUR"
+          if [ "$HOUR" = "07" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "Überspringe diesen Lauf (falscher Cron-Trigger für die aktuelle Jahreszeit)."
+          fi
+
+      - name: Set up Python
+        if:
